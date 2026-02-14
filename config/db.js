@@ -10,7 +10,7 @@ const dbConnect = async() => {
         await mongoose.connect(process.env.MONGO_URL)
         console.log("db connect")
     } catch (error) {
-        console.log(object)
+        console.log(error)
         process.exit(1)
     }
 }
