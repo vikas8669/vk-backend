@@ -21,8 +21,8 @@ exports.sendWelcomeEmail = async (email, name) => {
   });
 };
 
-exports.sendContactEmail = async ({ name, email, mobileNumber, description }) => {
-  const htmlContent = Contact_Email_Template({ name, email, mobileNumber, description });
+exports.sendContactEmail = async ({ name, email, mobile, description }) => {
+  const htmlContent = Contact_Email_Template({ name, email, mobile, description });
   await transporter.sendMail({
     from: `"Website Contact" <${process.env.EMAIL_USER_NAME}>`,
     to: "vikayadave8669@gmail.com", // your receiving email
