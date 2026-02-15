@@ -1,6 +1,8 @@
 const { transporter } = require("../config/sendMail");
 const { Verification_Email_Template, Welcome_Email_Template, Contact_Email_Template } = require("../utils/emailTampalete");
 
+require("dotenv").config()
+
 exports.sendVerificationEmail = async (email, code) => {
   const htmlContent = Verification_Email_Template.replace("{verificationCode}", code);
   await transporter.sendMail({
