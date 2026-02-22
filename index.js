@@ -10,8 +10,13 @@ const cors = require("cors")
 
 // app.use(cors({ origin: "http://localhost:5173" }))
 
-app.use(cors({ origin: "https://vk-port-six.vercel.app"}))
-app.use(cors({ origin: "https://admin-vk.vercel.app"}))
+app.use(cors({
+  origin: [
+    "https://vk-port-six.vercel.app",
+    "https://admin-vk.vercel.app"
+  ],
+  credentials: true
+}))
 
 app.use(express.json())
 
