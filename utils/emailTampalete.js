@@ -161,8 +161,62 @@ const Contact_Email_Template = ({ name, email, mobile, description }) => `
 </html>
 `;
 
+// ---------------------------
+// Admin Reply Email Template
+// ---------------------------
+const Admin_Reply_Email_Template = ({ name, reply }) => `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0"
+          style="background:#ffffff;border-radius:10px;padding:40px;box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+
+          <tr>
+            <td style="padding-bottom:20px;">
+              <h2 style="margin:0;color:#111;font-size:22px;">
+                Response from Our Support Team
+              </h2>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="color:#555;font-size:15px;line-height:1.8;">
+              <p>Hi <strong>${name || "User"}</strong>,</p>
+              <p>Thank you for contacting us. Here is our reply to your message:</p>
+
+              <div style="margin-top:10px;
+                          background:#f9fafb;
+                          padding:15px;
+                          border-radius:6px;
+                          border:1px solid #e5e7eb;">
+                ${reply || "No reply provided"}
+              </div>
+
+              <br/>
+              <p>If you have further questions, feel free to reply to this email.</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding-top:30px;color:#999;font-size:13px;text-align:center;">
+              This email was automatically sent from our support system.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
 module.exports = {
   Verification_Email_Template,
   Welcome_Email_Template,
   Contact_Email_Template,
+  Admin_Reply_Email_Template
 };

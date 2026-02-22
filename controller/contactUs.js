@@ -1,7 +1,8 @@
 // controller/contactUs.js
 const constactUs = require("../models/contactUs");
-const { sendContactEmail } = require("../utils/email");
+const { sendContactEmail, sendAdminReplyEmail } = require("../utils/email");
 const { getDeviceType, getBrowser } = require("../utils/deviceDetect");
+
 
 
 exports.contact = async (req, res) => {
@@ -202,23 +203,24 @@ exports.markRead = async (req, res) => {
 
 
 exports.sendReply = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { reply } = req.body;
+  try {
+    const { id } = req.params;
+    const { reply } = req.body;
 
-        const contact = await constactUs.findByIdAndUpdate(
-            id,
-            { status: "Replied", reply },
-            { new: true }
-        );
+    const contact = await constactUs.findByIdAndUpdate(
+      id,
+      { status: "Replied", reply },
+      { new: true }
+    );
 
-        if (!contact) return res.status(404).json({ message: "Contact not found" });
+    if (!contact) return res.status(404).json({ message: "Contact not found" });
 
-        // Optional: send email to user with reply
-        // await sendContactEmail({ email: contact.email, reply });
+    // Send email to user
+    await sendAdminReplyEmail({ name: contact.name, email: contact.email, reply });
 
-        return res.status(200).json({ success: true, data: contact });
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+    return res.status(200).json({ success: true, data: contact });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
+  }
 };
