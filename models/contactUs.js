@@ -19,7 +19,9 @@ const contactUs = new mongoose.Schema({
     description:{
         type:String,
         required:true
-    }
+    },
+    device: { type: String },
+    browser: { type: String }
 
 }, {timestamps:true})
 

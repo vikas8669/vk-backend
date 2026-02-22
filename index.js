@@ -13,7 +13,8 @@ const cors = require("cors")
 app.use(cors({
   origin: [
     "https://vk-port-six.vercel.app",
-    "https://admin-vk.vercel.app"
+    "https://admin-vk.vercel.app",
+    "http://localhost:5173"
   ],
   credentials: true
 }))
