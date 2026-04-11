@@ -5,6 +5,7 @@ dbConnect()
 
 const router = require("./routes/user")
 const contactRoute = require("./routes/contact")
+const projectRoute = require("./routes/project")
 
 const cors = require("cors")
 
@@ -14,7 +15,8 @@ app.use(cors({
   origin: [
     "https://vk-port-six.vercel.app",
     "https://admin-vk.vercel.app",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:5174"
   ],
   credentials: true
 }))
@@ -31,6 +33,7 @@ app.get("/", (req, res ) => {
 
 app.use("/api/v1",router)
 app.use("/api/v1", contactRoute )
+app.use("/api/v1", projectRoute )
 
 app.listen(PORT, () => {
     console.log("server start at", PORT)

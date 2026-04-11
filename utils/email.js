@@ -1,11 +1,11 @@
 // emailService.js
 import 'dotenv/config';
 import { transporter } from '../config/sendMail.js';
-import { 
-  Verification_Email_Template, 
-  Welcome_Email_Template, 
-  Contact_Email_Template, 
-  Admin_Reply_Email_Template 
+import {
+  Verification_Email_Template,
+  Welcome_Email_Template,
+  Contact_Email_Template,
+  Admin_Reply_Email_Template
 } from '../utils/emailTampalete.js';
 
 /**
