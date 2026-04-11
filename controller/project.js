@@ -116,9 +116,10 @@ exports.getProjects = async (req, res) => {
 
     const skip = (page - 1) * limit
 
-    const [projects, total] = await Promise.all([
+      const [projects, total] = await Promise.all([
       Project.find(filter)
-        .select("title description images isActive createdAt")
+        // 👇 ADD customFields RIGHT HERE 👇
+        .select("title description images isActive createdAt customFields") 
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -126,6 +127,7 @@ exports.getProjects = async (req, res) => {
 
       Project.countDocuments(filter)
     ])
+
 
     res.status(200).json({
       success: true,
