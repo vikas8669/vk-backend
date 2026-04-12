@@ -6,7 +6,7 @@ dbConnect()
 const router = require("./routes/user")
 const contactRoute = require("./routes/contact")
 const projectRoute = require("./routes/project")
-
+const razorpayRoute = require("./routes/payment")
 const cors = require("cors")
 
 // app.use(cors({ origin: "http://localhost:5173" }))
@@ -21,6 +21,10 @@ app.use(cors({
   credentials: true
 }))
 
+app.use(
+  "/api/v1/payment/webhook",
+  express.raw({ type: "application/json" })
+)
 app.use(express.json())
 
 
@@ -34,6 +38,8 @@ app.get("/", (req, res ) => {
 app.use("/api/v1",router)
 app.use("/api/v1", contactRoute )
 app.use("/api/v1", projectRoute )
+app.use("/api/v1", razorpayRoute )
+
 
 app.listen(PORT, () => {
     console.log("server start at", PORT)
