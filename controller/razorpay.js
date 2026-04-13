@@ -158,39 +158,31 @@ exports.verifyPayment = async (req, res) => {
             })
         }
 
-        // 4. Get project for download link
-        const project = await Project.findById(purchase.projectId)
+        // 4. Finalize payment using the centralized service (this generates the invoice)
+        const { purchase: updatedPurchase } = await finalizePurchasePayment({
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+            signature: razorpay_signature,
+            eventId: razorpay_payment_id,
+            capturedAt: new Date(),
+            webhookReceivedAt: new Date(),
+            req
+        })
 
-        const downloadLink =
-            project?.customFields?.downloadLink ||
-            project?.customFields?.Buy?.downloadLink ||
-            ""
+        if (!updatedPurchase) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to finalize purchase"
+            })
+        }
 
-        // 5. OPTIONAL: invoice URL (if you generate invoices later)
-        const invoiceUrl = purchase.invoiceUrl || ""
-
-        // 6. Update purchase
-        const updatedPurchase = await Purchase.findOneAndUpdate(
-            { razorpay_order_id },
-            {
-                $set: {
-                    razorpay_payment_id,
-                    razorpay_signature,
-                    paymentStatus: "success",
-                    downloadLink: downloadLink,
-                    updatedAt: new Date()
-                }
-            },
-            { new: true }
-        )
-
-        // 7. FINAL RESPONSE (IMPORTANT)
+        // 5. FINAL RESPONSE (IMPORTANT)
         return res.status(200).json({
             success: true,
             message: "Payment successful",
             purchase: updatedPurchase,
             downloadLink: updatedPurchase.downloadLink,
-            invoiceUrl: invoiceUrl,
+            invoiceUrl: updatedPurchase.invoiceUrl || "",
             paymentStatus: updatedPurchase.paymentStatus
         })
 
@@ -230,12 +222,6 @@ exports.downloadPurchasedProject = async (req, res) => {
             })
         }
 
-        if (purchase.downloadUsed) {
-            return res.status(410).json({
-                success: false,
-                message: "Download link already used"
-            })
-        }
 
         if (!purchase.tokenExpiry || purchase.tokenExpiry < new Date()) {
             return res.status(410).json({
@@ -262,6 +248,10 @@ exports.downloadPurchasedProject = async (req, res) => {
         })
 
         await purchase.save()
+
+        if (req.query.redirect === 'true') {
+            return res.redirect(purchase.downloadLink)
+        }
 
         return res.status(200).json({
             success: true,

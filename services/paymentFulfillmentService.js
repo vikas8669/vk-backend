@@ -50,8 +50,8 @@ const finalizePurchasePayment = async ({
             return { purchase: null, alreadyProcessed: false }
         }
 
-        // 2. Prevent duplicate processing
-        if (purchase.paymentStatus === "success") {
+        // 2. Prevent duplicate processing (unless invoice is missing)
+        if (purchase.paymentStatus === "success" && purchase.invoiceUrl) {
             return { purchase, alreadyProcessed: true }
         }
 
@@ -68,7 +68,7 @@ const finalizePurchasePayment = async ({
         const baseUrl = buildBaseUrl(req)
 
         const secureDownloadUrl =
-            `${baseUrl}/api/v1/payment/download/${downloadToken}`
+            `${baseUrl}/api/v1/payment/download/${downloadToken}?redirect=true`
 
         // 4. Generate invoice
         const invoice = await generateInvoicePdf({
