@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express()
+const path = require("path")
 const dbConnect = require("./config/db")
 dbConnect()
 
@@ -26,6 +27,7 @@ app.use(
   express.raw({ type: "application/json" })
 )
 app.use(express.json())
+app.use("/invoices", express.static(path.join(__dirname, "generated", "invoices")))
 
 
 const PORT = process.env.PORT || 3000

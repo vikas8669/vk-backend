@@ -19,6 +19,24 @@ const normalizeBoolean = (value) => {
   return undefined
 }
 
+const isPlainObject = (value) =>
+  value && typeof value === "object" && !Array.isArray(value)
+
+const deepMergeObjects = (target = {}, source = {}) => {
+  const output = { ...target }
+
+  Object.entries(source).forEach(([key, value]) => {
+    if (isPlainObject(value) && isPlainObject(output[key])) {
+      output[key] = deepMergeObjects(output[key], value)
+      return
+    }
+
+    output[key] = value
+  })
+
+  return output
+}
+
 const buildCustomFields = (body) => {
   const excluded = new Set(["title", "description", "isActive", "customFields"])
   const dynamicFields = {}
@@ -217,13 +235,15 @@ exports.updateProject = async (req, res) => {
       project.isActive = isActive
     }
 
+    const hasExplicitCustomFields = Object.prototype.hasOwnProperty.call(
+      req.body || {},
+      "customFields"
+    )
     const customFields = buildCustomFields(req.body)
 
-    if (Object.keys(customFields).length > 0) {
-      project.customFields = {
-        ...(project.customFields || {}),
-        ...customFields
-      }
+    if (hasExplicitCustomFields || Object.keys(customFields).length > 0) {
+      project.customFields = deepMergeObjects(project.customFields || {}, customFields)
+      project.markModified("customFields")
     }
 
 
