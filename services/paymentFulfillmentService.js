@@ -31,7 +31,7 @@ const toDirectGoogleDriveLink = (link) => {
     }
 
     return link
-}
+};
 
 const finalizePurchasePayment = async ({
     orderId,
@@ -131,7 +131,7 @@ const finalizePurchasePayment = async ({
         console.log("finalizePurchasePayment error:", error)
         return { purchase: null, alreadyProcessed: false }
     }
-}
+};
 
 module.exports = {
     finalizePurchasePayment,
