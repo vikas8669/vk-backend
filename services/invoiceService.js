@@ -53,7 +53,7 @@ const generateInvoicePdf = async ({
         doc.fillColor("#ffffff").fontSize(24).font("Helvetica-Bold").text("VK", 55, 62)
         
         // Brand Name
-        doc.fillColor(primaryColor).fontSize(14).text("Portfolio & Projects", 110, 55)
+        doc.fillColor(primaryColor).fontSize(14).text("BomX Portfolio", 110, 55)
         doc.fillColor(lightGray).fontSize(10).font("Helvetica").text("Digital Products Delivery", 110, 75)
         
         // Right Side Titles
