@@ -1,12 +1,5 @@
-const fs = require("fs")
-const path = require("path")
 const PDFDocument = require("pdfkit")
-
-const invoicesDir = path.join(__dirname, "..", "generated", "invoices")
-
-const ensureInvoicesDir = async () => {
-    await fs.promises.mkdir(invoicesDir, { recursive: true })
-}
+const { cloudinary } = require("../utils/cloudinary")
 
 const formatCurrency = (amount, currency = "INR") =>
     new Intl.NumberFormat("en-IN", {
@@ -25,21 +18,28 @@ const generateInvoicePdf = async ({
     date,
     baseUrl
 }) => {
-    await ensureInvoicesDir()
-
     const safeInvoiceId = String(invoiceId).replace(/[^a-zA-Z0-9_-]/g, "")
     const fileName = `${safeInvoiceId}.pdf`
-    const filePath = path.join(invoicesDir, fileName)
 
-    await new Promise((resolve, reject) => {
+    const invoiceUrl = await new Promise((resolve, reject) => {
         const doc = new PDFDocument({ margin: 50 })
-        const stream = fs.createWriteStream(filePath)
+        
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                folder: "invoices",
+                resource_type: "raw", 
+                public_id: fileName
+            },
+            (error, result) => {
+                if (error) {
+                    console.error("Cloudinary invoice upload error:", error)
+                    return reject(error)
+                }
+                resolve(result.secure_url)
+            }
+        )
 
-        stream.on("finish", resolve)
-        stream.on("error", reject)
-        doc.on("error", reject)
-
-        doc.pipe(stream)
+        doc.pipe(uploadStream)
 
         doc.fontSize(22).text("INVOICE", { align: "center" })
         doc.moveDown()
@@ -61,16 +61,10 @@ const generateInvoicePdf = async ({
         doc.end()
     })
 
-    // IMPORTANT: public URL for frontend
-    const relativeUrl = `/invoices/${fileName}`
-    const invoiceUrl = baseUrl
-        ? `${baseUrl}${relativeUrl}`
-        : relativeUrl
-
     return {
         fileName,
-        filePath,
-        relativeUrl,
+        filePath: fileName,
+        relativeUrl: invoiceUrl,
         invoiceUrl
     }
 }
