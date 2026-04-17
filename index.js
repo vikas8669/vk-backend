@@ -51,8 +51,8 @@ app.use("/api/v1/notifications", notificationRoute)
 app.use("/api/v1/reviews", reviewRoute)
 
 
-// app.listen(PORT, () => {
-//     console.log("server start at", PORT)
-// })
+app.listen(PORT, () => {
+    console.log("server start at", PORT)
+})
 
-export default app
+// export default app
