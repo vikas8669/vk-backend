@@ -1,5 +1,6 @@
 // controller/contactUs.js
 const constactUs = require("../models/contactUs");
+const Notification = require("../models/notification");
 const { sendContactEmail, sendAdminReplyEmail } = require("../utils/email");
 const { getDeviceType, getBrowser } = require("../utils/deviceDetect");
 
@@ -19,6 +20,19 @@ exports.contact = async (req, res) => {
         const browser = getBrowser(userAgent);
 
         const response = await constactUs.create({ name, mobile, email, description, device, browser });
+        
+        // Create Admin Notification
+        await Notification.create({
+            type: "contact",
+            title: "New Contact Message",
+            message: `New message from ${name} (${email})`,
+            link: "/admin/messages",
+            metadata: {
+                contactId: response._id.toString(),
+                email: email
+            }
+        });
+
         await sendContactEmail({ name, mobile, email, description });
 
         return res.status(201).json({
@@ -34,13 +48,20 @@ exports.contact = async (req, res) => {
 
 exports.getAllContact = async (req, res) => {
     try {
-        const response = await constactUs.find({});
-        const total = await constactUs.countDocuments({})
+        const { status } = req.query;
+        let query = {};
+        if (status && status !== "All") {
+            query.status = status;
+        }
+
+        const response = await constactUs.find(query).sort({ createdAt: -1 });
+        const total = await constactUs.countDocuments(query);
+
         // If no contacts found
         if (!response || response.length === 0) {
-            return res.status(404).json({
-                success: false,
-                total,
+            return res.status(200).json({
+                success: true,
+                total: 0,
                 message: "No contacts found!",
                 data: [],
             });

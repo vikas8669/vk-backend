@@ -38,7 +38,7 @@ const deepMergeObjects = (target = {}, source = {}) => {
 }
 
 const buildCustomFields = (body) => {
-  const excluded = new Set(["title", "description", "isActive", "customFields"])
+  const excluded = new Set(["title", "description", "isActive", "customFields", "packageDetails"])
   const dynamicFields = {}
 
   Object.entries(body || {}).forEach(([key, value]) => {
@@ -88,6 +88,7 @@ exports.createProject = async (req, res) => {
       title,
       description,
       customFields,
+      packageDetails: req.body.packageDetails || "",
       images
     }
 
@@ -137,7 +138,7 @@ exports.getProjects = async (req, res) => {
       const [projects, total] = await Promise.all([
       Project.find(filter)
         // 👇 ADD customFields RIGHT HERE 👇
-        .select("title description images isActive createdAt customFields") 
+        .select("title description images isActive createdAt customFields packageDetails") 
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -228,6 +229,7 @@ exports.updateProject = async (req, res) => {
 
     if (title) project.title = title
     if (typeof description !== "undefined") project.description = description
+    if (typeof req.body.packageDetails !== "undefined") project.packageDetails = req.body.packageDetails
 
     const isActive = normalizeBoolean(req.body.isActive)
 

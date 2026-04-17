@@ -15,6 +15,7 @@ const projectSchema = new mongoose.Schema(
       }
     ],
     customFields: { type: mongoose.Schema.Types.Mixed, default: {} },
+    packageDetails: { type: String, default: "" },
     isActive: { type: Boolean, default: true }
   },
   { timestamps: true, minimize: false }

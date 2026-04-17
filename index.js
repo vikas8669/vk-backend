@@ -7,7 +7,11 @@ dbConnect()
 const router = require("./routes/user")
 const contactRoute = require("./routes/contact")
 const projectRoute = require("./routes/project")
+const blogRoute = require("./routes/blog")
+const categoryRoute = require("./routes/category")
 const razorpayRoute = require("./routes/payment")
+const notificationRoute = require("./routes/notification")
+const reviewRoute = require("./routes/review")
 const cors = require("cors")
 
 // app.use(cors({ origin: "http://localhost:5173" }))
@@ -40,7 +44,11 @@ app.get("/", (req, res ) => {
 app.use("/api/v1",router)
 app.use("/api/v1", contactRoute )
 app.use("/api/v1", projectRoute )
+app.use("/api/v1", blogRoute )
+app.use("/api/v1", categoryRoute )
 app.use("/api/v1", razorpayRoute )
+app.use("/api/v1/notifications", notificationRoute)
+app.use("/api/v1/reviews", reviewRoute)
 
 
 app.listen(PORT, () => {

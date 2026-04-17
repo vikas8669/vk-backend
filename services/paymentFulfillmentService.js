@@ -2,6 +2,7 @@ const crypto = require("crypto")
 
 const Project = require("../models/project")
 const Purchase = require("../models/purchase")
+const Notification = require("../models/notification")
 const { generateInvoicePdf } = require("./invoiceService")
 const { sendPaymentSuccessEmail } = require("./paymentEmailService")
 
@@ -108,6 +109,19 @@ const finalizePurchasePayment = async ({
             },
             { new: true }
         )
+
+        // Create Admin Notification
+        await Notification.create({
+            type: "payment",
+            title: "New Successful Payment",
+            message: `Payment of ₹${purchase.amount} received from ${purchase.userName} for ${purchase.projectTitle}`,
+            link: "/admin",
+            metadata: {
+                purchaseId: updatedPurchase._id.toString(),
+                email: purchase.userEmail,
+                amount: purchase.amount.toString()
+            }
+        });
 
         // 6. EMAIL (safe try-catch)
         try {
