@@ -1,6 +1,7 @@
 name: Keep Render Alive
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "*/5 * * * *"
 
