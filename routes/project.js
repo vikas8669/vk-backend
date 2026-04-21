@@ -10,10 +10,10 @@ const {
   deleteProject
 } = require("../controller/project")
 
-router.post("/projects", upload.array("images", 5), createProject)
+router.post("/projects", upload.array("images", 15), createProject)
 router.get("/projects", getProjects)
 router.get("/projects/:id", getProjectById)
-router.put("/projects/:id",  upload.array("images", 5), updateProject)
+router.put("/projects/:id",  upload.array("images", 15), updateProject)
 router.delete("/projects/:id", deleteProject)
 
 module.exports = router
