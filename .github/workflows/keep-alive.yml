@@ -8,4 +8,4 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - run: curl https://your-api.onrender.com/api/health
+      - run: curl https://portfolio-crsz.onrender.com/api/health
