@@ -41,7 +41,7 @@ export const sendContactEmail = async ({ name, email, mobile, description }) => 
   const htmlContent = Contact_Email_Template({ name, email, mobile, description });
   await transporter.sendMail({
     from: `"Website Contact" <${process.env.EMAIL_USER_NAME}>`,
-    to: "vikayadav8669@gmail.com", // admin email
+    to: "vikasyadav326234@gmail.com", // admin email
     subject: "New Contact Form Submission",
     html: htmlContent,
   });
