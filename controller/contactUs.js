@@ -33,7 +33,7 @@ exports.contact = async (req, res) => {
             }
         });
 
-        await sendContactEmail({ name, mobile, email, description });
+        sendContactEmail({ name, mobile, email, description });
 
         return res.status(201).json({
             success: true,
@@ -238,7 +238,7 @@ exports.sendReply = async (req, res) => {
     if (!contact) return res.status(404).json({ message: "Contact not found" });
 
     // Send email to user
-    await sendAdminReplyEmail({ name: contact.name, email: contact.email, reply });
+    sendAdminReplyEmail({ name: contact.name, email: contact.email, reply });
 
     return res.status(200).json({ success: true, data: contact });
   } catch (err) {

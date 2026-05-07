@@ -125,7 +125,7 @@ const finalizePurchasePayment = async ({
 
         // 6. EMAIL (safe try-catch)
         try {
-            await sendPaymentSuccessEmail({
+            sendPaymentSuccessEmail({
                 to: updatedPurchase.userEmail,
                 userName: updatedPurchase.userName,
                 projectTitle: updatedPurchase.projectTitle,

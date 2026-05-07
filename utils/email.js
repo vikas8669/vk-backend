@@ -1,6 +1,6 @@
 // emailService.js
 import 'dotenv/config';
-import { Resend } from 'resend';
+import { transporter } from '../config/sendMail.js';
 import {
   Verification_Email_Template,
   Welcome_Email_Template,
@@ -8,19 +8,17 @@ import {
   Admin_Reply_Email_Template
 } from '../utils/emailTampalete.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 /**
  * Send verification email
  */
 export const sendVerificationEmail = async (email, code) => {
   const htmlContent = Verification_Email_Template(code);
-  await resend.emails.send({
-    from: 'onboarding@resend.dev',
+  transporter.sendMail({
+    from: `"Bom~X" <${process.env.EMAIL_USER_NAME}>`,
     to: email,
     subject: "Verify your Email",
     html: htmlContent,
-  });
+  }).catch(err => console.error("Verification email error:", err));
 };
 
 /**
@@ -28,12 +26,12 @@ export const sendVerificationEmail = async (email, code) => {
  */
 export const sendWelcomeEmail = async (email, name) => {
   const htmlContent = Welcome_Email_Template(name);
-  await resend.emails.send({
-    from: 'onboarding@resend.dev',
+  transporter.sendMail({
+    from: `"Bom~X" <${process.env.EMAIL_USER_NAME}>`,
     to: email,
     subject: "Welcome Email",
     html: htmlContent,
-  });
+  }).catch(err => console.error("Welcome email error:", err));
 };
 
 /**
@@ -41,12 +39,12 @@ export const sendWelcomeEmail = async (email, name) => {
  */
 export const sendContactEmail = async ({ name, email, mobile, description }) => {
   const htmlContent = Contact_Email_Template({ name, email, mobile, description });
-  await resend.emails.send({
-    from: 'onboarding@resend.dev',
+  transporter.sendMail({
+    from: `"Website Contact" <${process.env.EMAIL_USER_NAME}>`,
     to: "vikasyadav326234@gmail.com", // admin email
     subject: "New Contact Form Submission",
     html: htmlContent,
-  });
+  }).catch(err => console.error("Contact email error:", err));
 };
 
 /**
@@ -54,10 +52,10 @@ export const sendContactEmail = async ({ name, email, mobile, description }) => 
  */
 export const sendAdminReplyEmail = async ({ name, email, reply }) => {
   const htmlContent = Admin_Reply_Email_Template({ name, reply });
-  await resend.emails.send({
-    from: 'onboarding@resend.dev',
+  transporter.sendMail({
+    from: `"Support Team" <${process.env.EMAIL_USER_NAME}>`,
     to: email,
     subject: "Reply to your message",
     html: htmlContent,
-  });
-};
+  }).catch(err => console.error("Admin reply email error:", err));
+};

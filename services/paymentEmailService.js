@@ -1,16 +1,15 @@
-const { Resend } = require("resend");
-const resend = new Resend(process.env.RESEND_API_KEY);
+const { transporter } = require("../config/sendMail")
 
 const sendPaymentSuccessEmail = async ({
-    to,
-    userName,
-    projectTitle,
-    downloadUrl,
-    invoiceUrl
+  to,
+  userName,
+  projectTitle,
+  downloadUrl,
+  invoiceUrl
 }) => {
-    if (!to) return
+  if (!to) return
 
-    const html = `
+  const html = `
       <div style="font-family:Arial,Helvetica,sans-serif;background:#f7f7f7;padding:24px;">
         <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;">
           <h2 style="margin:0 0 16px;color:#111827;">Payment Successful</h2>
@@ -33,19 +32,16 @@ const sendPaymentSuccessEmail = async ({
       </div>
     `
 
-     await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to,
-        subject: "Payment Successful - Your Download Link",
-        html
-    }).catch(err => {
-        console.error("Resend payment email error:", err);
-    });
+  transporter.sendMail({
+    from: `"Bom~X" <${process.env.EMAIL_USER_NAME}>`,
+    to,
+    subject: "Payment Successful - Your Download Link",
+    html
+  }).catch(err => {
+    console.error("Nodemailer payment email error:", err);
+  });
 }
 
 module.exports = {
-    sendPaymentSuccessEmail
+  sendPaymentSuccessEmail
 }
-
-
-
