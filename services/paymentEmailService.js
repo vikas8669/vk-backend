@@ -1,4 +1,5 @@
-const { transporter } = require("../config/sendMail")
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendPaymentSuccessEmail = async ({
     to,
@@ -32,16 +33,19 @@ const sendPaymentSuccessEmail = async ({
       </div>
     `
 
-     transporter.sendMail({
-        from: `"Bom~X" <${process.env.EMAIL_USER_NAME}>`,
+     await resend.emails.send({
+        from: 'onboarding@resend.dev',
         to,
         subject: "Payment Successful - Your Download Link",
         html
-    })
+    }).catch(err => {
+        console.error("Resend payment email error:", err);
+    });
 }
 
 module.exports = {
     sendPaymentSuccessEmail
 }
+
 
 
