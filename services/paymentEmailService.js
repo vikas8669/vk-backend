@@ -32,7 +32,7 @@ const sendPaymentSuccessEmail = async ({
       </div>
     `
 
-    await transporter.sendMail({
+     transporter.sendMail({
         from: `"Bom~X" <${process.env.EMAIL_USER_NAME}>`,
         to,
         subject: "Payment Successful - Your Download Link",
